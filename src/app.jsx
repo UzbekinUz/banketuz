@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-// const API_URL = 'https://banketuz-server.onrender.com/api'; // Serveringiz manzili
-const API_URL = "http://localhost:5000/api";
+const API_URL = 'https://banketuz-server.onrender.com/api'; // Serveringiz manzili
+// const API_URL = "http://localhost:5000/api";
 export default function BanquetOrderApp() {
   const [activeTab, setActiveTab] = useState("order");
 
