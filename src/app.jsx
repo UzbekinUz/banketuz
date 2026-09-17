@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-const API_URL = 'https://banketuz-server.onrender.com/api'; // Serveringiz manzili
-// const API_URL = "http://localhost:5000/api";
+// const API_URL = 'https://banketuz-server.onrender.com/api'; // Serveringiz manzili
+const API_URL = "http://localhost:5000/api";
 export default function BanquetOrderApp() {
   const [activeTab, setActiveTab] = useState("order");
 
@@ -61,7 +61,8 @@ export default function BanquetOrderApp() {
     try {
       const { data } = await axios.get(`${API_URL}/settings/get`);
       const list = Array.isArray(data) ? data : data?.data || [];
-      if (list.length > 0) setSettings(list[0]);
+      console.log(list);
+      setSettings(list);
     } catch (err) {
       console.error("Settings yuklashda xatolik:", err);
     }
@@ -218,14 +219,8 @@ export default function BanquetOrderApp() {
 
   const saveSettings = async () => {
     try {
-      const isEdit = Boolean(settings._id);
-      const url = isEdit
-        ? `${API_URL}/settings/edit/${settings._id}`
-        : `${API_URL}/settings`;
-
-      const res = isEdit
-        ? await axios.put(url, settings)
-        : await axios.post(url, settings);
+      const url = `${API_URL}/settings/edit`;
+      const res = await axios.put(url, settings);
 
       if (res.status === 200 || res.status === 201) {
         showToast("Sozlamalar saqlandi!");
@@ -512,9 +507,9 @@ export default function BanquetOrderApp() {
               <div className="doc-title">ЗАКАЗ БАНКЕТА</div>
             </div>
             <div className="contact-line">
-              <span>&#9742;&#65039; Тел: {settings.phone || "—"}</span>
-              <span>&#128247; Instagram: {settings.insta || "—"}</span>
-              <span>&#128205; Манзил: {settings.addr || "—"}</span>
+              <span>&#9742;&#65039; Тел: {settings.phone }</span>
+              <span>&#128247; Instagram: {settings.insta }</span>
+              <span>&#128205; Манзил: {settings.addr }</span>
             </div>
           </div>
 
@@ -955,7 +950,6 @@ export default function BanquetOrderApp() {
                     onChange={(e) =>
                       setSettings({ ...settings, phone: e.target.value })
                     }
-                    onBlur={saveSettings}
                     placeholder="Тел: +998 90 000 00 00"
                   />
                   <input
@@ -964,7 +958,6 @@ export default function BanquetOrderApp() {
                     onChange={(e) =>
                       setSettings({ ...settings, insta: e.target.value })
                     }
-                    onBlur={saveSettings}
                     placeholder="Instagram: @ipakyoli"
                   />
                   <input
@@ -973,10 +966,20 @@ export default function BanquetOrderApp() {
                     onChange={(e) =>
                       setSettings({ ...settings, addr: e.target.value })
                     }
-                    onBlur={saveSettings}
                     placeholder="Манзил: Тошкент ш., ..."
                   />
                 </div>
+                <button
+                  className="save-button"
+                  onClick={saveSettings}
+                  disabled={
+                    !settings.phone?.trim() &&
+                    !settings.insta?.trim() &&
+                    !settings.addr?.trim()
+                  }
+                >
+                  Save
+                </button>
               </div>
 
               {/* Admin DefServices Block */}
