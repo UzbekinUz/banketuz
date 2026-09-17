@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-// const API_URL = 'https://banketuz-server.onrender.com/api'; // Serveringiz manzili
-const API_URL = "http://localhost:5000/api";
+import Orderr from "./orderr"; 
+// To'g'ri import shakli//  // Serveringiz manzili
+// const API_URL = "http://localhost:5000/api";
+const API_URL = 'https://banketuz-server.onrender.com/api';
 export default function BanquetOrderApp() {
   const [activeTab, setActiveTab] = useState("order");
 
@@ -61,7 +63,6 @@ export default function BanquetOrderApp() {
     try {
       const { data } = await axios.get(`${API_URL}/settings/get`);
       const list = Array.isArray(data) ? data : data?.data || [];
-      console.log(list);
       setSettings(list);
     } catch (err) {
       console.error("Settings yuklashda xatolik:", err);
@@ -492,6 +493,12 @@ export default function BanquetOrderApp() {
         >
           Admin panel
         </button>
+        <button
+          className={`tab-btn ${activeTab === "userlist" ? "active" : ""}`}
+          onClick={() => setActiveTab("userlist")}
+        >
+          Arxiv
+        </button>
       </div>
 
       {/* ================= ORDER VIEW ================= */}
@@ -895,7 +902,7 @@ export default function BanquetOrderApp() {
           </div>
         </div>
       )}
-
+      {activeTab === "userlist" && <Orderr/>}
       {/* ================= ADMIN VIEW ================= */}
       {activeTab === "admin" && (
         <div className="wrap">
@@ -939,6 +946,7 @@ export default function BanquetOrderApp() {
                 >
                   Chiqish
                 </button>
+                <a></a>
               </div>
 
               <div className="admin-settings">
